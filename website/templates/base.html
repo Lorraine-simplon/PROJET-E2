@@ -1,0 +1,23 @@
+<!doctype html>
+<title>Prédiction maladie de la rétine</title> <!-- Nom que portera l'onglet du site web-->
+<h2>Sélectionner une image</h2>
+<p>
+	{% with messages = get_flashed_messages() %} 
+	  {% if messages %}
+        Label: {{ messages[0] }} <!-- Donne le nom de la maladie et la numérotation de la maladie -->
+        Accuracy: {{ messages[1] }}
+	  {% endif %}
+	{% endwith %}
+</p>
+<form method="post" action="/application" enctype="multipart/form-data"> <!-- Action prend la route de application.py -->
+    <dl>
+	<p>
+		<input type="file" name="images" autocomplete="off" required>
+	</p>
+    </dl>
+    <p>
+	<input type="submit" value="Prédiction">
+    </p>
+</form>
+
+
