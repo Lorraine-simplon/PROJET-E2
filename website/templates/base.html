@@ -1,23 +1,47 @@
-<!doctype html>
-<title>Prédiction maladie de la rétine</title> <!-- Nom que portera l'onglet du site web-->
-<h2>Sélectionner une image</h2>
-<p>
-	{% with messages = get_flashed_messages() %} 
-	  {% if messages %}
-        Label: {{ messages[0] }} <!-- Donne le nom de la maladie et la numérotation de la maladie -->
-        Accuracy: {{ messages[1] }}
-	  {% endif %}
-	{% endwith %}
-</p>
-<form method="post" action="/application" enctype="multipart/form-data"> <!-- Action prend la route de application.py -->
-    <dl>
-	<p>
-		<input type="file" name="images" autocomplete="off" required>
-	</p>
-    </dl>
-    <p>
-	<input type="submit" value="Prédiction">
-    </p>
-</form>
+<link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 
 
+<!------ Include the above in your HEAD tag ---------->
+
+<br> <br> <br> <br> <br>
+
+<div class="container">
+	  <div class="panel panel-default">
+		<title>Prédiction maladie de la rétine</title> <!-- Nom que portera l'onglet du site web -->
+		<div class="panel-heading"><strong>Sélectionner une image</strong> </div>
+		<div class="panel-body">
+
+			<p>
+				{% if json_result %}
+				Désignation du fichier : {{ json_result[0].file }} <!-- Donne le nom du fichier qui a été chargé -->
+				Prédiction pathologie :{{ predicted_disease }} <!-- Donne le nom de la maladie-->
+				{% endif %}
+			
+			</p>
+			
+		  <!-- Standar Form -->
+		  <h4>Choisir un fichier</h4>
+		  <form method="post" action="/application" enctype="multipart/form-data"> <!-- Action prend la route de application.py -->
+			<dl>
+			<p>
+				<input type="file" name="images" autocomplete="off" required>
+			</p>
+			</dl>
+			<p>
+			<input type="submit" class="btn btn-sm btn-primary" value="Prediction">
+			</p>
+		</form>
+
+		  <br>
+
+		  <!-- Progress Bar -->
+		  <div class="progress">
+			<div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
+			  <span class="sr-only">100% Complete</span>
+			</div>
+		  </div>
+		</div>
+	  </div>
+	</div> <!-- /container -->

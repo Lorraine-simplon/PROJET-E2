@@ -12,33 +12,24 @@ model = tf.keras.models.load_model('website/static/retinal-oct_final.h5')
 
 app = Flask(__name__)
 
+diseases = {
+    0 : 'Maladie CNV',
+    1 : 'Maladie DME',
+    2 : 'Maladie DRUSEN',
+    3 : 'Aucune maladie'
+}
+
 @application.route('/application', methods=['GET','POST'])
 def application_panel():
     if request.method == 'POST':
         form_data = request.files
         prediction_result = bulk_infer_image(form_data)
-        json_result = json.dumps(prediction_result)
-        if not len(json_result) == 0:
-            flash(json_result)
-            return render_template('base.html', json_result=json_result)
-        
+        #json_result = json.dumps(prediction_result)
+        predicted_disease_number = prediction_result[0]['prediction']
+        predicted_disease_str = diseases[predicted_disease_number]
+        return render_template('base.html', json_result = prediction_result, predicted_disease = predicted_disease_str)
 
-        # if not len(json_result) == 0:
-        #     flash(json_result)
-        #     return('Maladie CNV', json_result)
-        # if not len(json_result) == 1:
-        #     flash(json_result)
-        #     return('Maladie DME', json_result)
-        # if not len(json_result) == 2:
-        #     flash(json_result)
-        #     return('Maladie DRUSEN', json_result) 
-        # if not len(json_result) == 3:
-        #     flash(json_result)
-        #     return('Aucune maladie', json_result)
 
-        else:
-            flash("mdr ça marche pas")
-            return render_template('base.html')
     return 'PREDICTION MALADIE DE LA RETINE'
 
 def prepare_image(img):
@@ -49,9 +40,11 @@ def prepare_image(img):
     
     return img
 
+
 def predict_result(img):
     Y_pred = model.predict(img)
-    return np.argmax(Y_pred, axis=1)
+    print('Prédiction du modèle: ', Y_pred)
+    return np.argmax(Y_pred, axis=1) #argmax permet de trouver la valeur maximale donc la meilleure prédiction possible de la bonne pathologie
 
 
 def bulk_infer_image(form_data):
